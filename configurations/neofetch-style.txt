@@ -1,0 +1,18 @@
+/d  ?y━━━━━━━━━━━┳━━━━━━━━┫ ?d%user ?y┣━┫ ?d%host ?y┃
+/d  ?bOS         ?y┃ ?d%distro
+/d  ?bHost       ?y┃ ?d%model
+/d  ?bKernel     ?y┃ ?d%kernel
+/d  ?bUptime     ?y┃ ?d%lh-uptime
+/d  ?bPackages   ?y┃ ?d%pkg
+/d  ?bShell      ?y┃ ?d%shell
+/d  ?bResolution ?y┃ ?d%resolution
+/d  ?bWM         ?y┃ ?d%wm
+/d  ?bTheme      ?y┃ ?dCustom
+/d  ?bIcons      ?y┃ ?dPaper
+/d  ?bTerminal   ?y┃ ?d%terminal_type
+/d  ?bCPU        ?y┃ ?d%s-cpu
+/d  ?bGPU        ?y┃ ?d%gpu
+/d  ?bMemory     ?y┃ ?d%ram_widget
+/d  ?y━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━
+/d  /l     /r    /g     /y    /b     /m    /c     \q    /d
+/d  /q     \r    \g     \y    \b     \m    \c     /w    /d

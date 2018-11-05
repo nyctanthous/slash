@@ -1,0 +1,20 @@
+?y    * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+
+    $b>$q \r %ls-uptime /d of uptime.
+    ?b>?r My GPU is still a /b %gpu. /d
+    $b>?m I've used /y %ram_widget /d of my RAM.
+
+    My hostname and model is \q %host /d, \c %model /d          ?r<?d
+    $qThis terminal is ?rs?wp$ba?yr$mk?cl$yy$q in a manner of speaking.   $r<?d
+    I ran this in the \g %terminal_type /d terminal emulator. ?r<?d
+
+    ?w>$q Over here running /l %shell /d like a looser.
+    $q>$q Real men use \c ?lsh /d.
+
+
+
+
+?y    * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Bet you didn't expect text down here, did you?
