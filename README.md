@@ -8,8 +8,8 @@ While good for simple programs where latency or performance isn't important, the
 ## Configurability is nice.
 In most Screenfetch-like programs, you have fairly limited control over what inforamtion gets displayed. Not so with slash. You are given a configuration file dictating the information and format, so now you can customize to your heart's content.
 
-## Thanks
-Bash or no, the programming behind [screenfetch][1] and [neofetch][2] has proven a valuable resource when looking for a place to get started. Thanks for the idea and fo providing these useful tools to the community.
+## Thanks.
+Bash or no, the programming behind [screenfetch][1] and [neofetch][2] has proven a valuable resource when looking for a place to get started. Thanks for the idea and for providing these useful tools to the community.
 
 [1]: https://github.com/KittyKatt/screenFetch
 [2]: https://github.com/dylanaraps/neofetch
