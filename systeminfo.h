@@ -8,6 +8,8 @@ void get_shell(char **shell_string);
 void get_memory(char **mem_string);
 void get_model(char **mem_string);
 void get_packages(char **pkg_string);
+void get_gtk (char **gtk_string, char *name, char *gsettings);
+void get_wm_theme (char **theme_string, char **wm_string);
 
 void rem_sub_str(char *str, const char *toRemove);
 char *replace_str(const char *s, const char *oldW, const char *newW);

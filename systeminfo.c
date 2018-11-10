@@ -46,7 +46,7 @@ char *replace_str(const char *s, const char *oldW,
     result = (char *)malloc(i + cnt * (newWlen - oldWlen) + 1); 
   
     i = 0; 
-    while (*s){ 
+    while (*s){
         // compare the substring with the result 
         if (strstr(s, oldW) == s){ 
             strcpy(&result[i], newW); 
@@ -119,9 +119,11 @@ void get_resolution(char **res){
         token = strtok(tmp, " ");
         strcat(*res, token);
 
-        // Now, for hz
+        /* Now, for hz */
         token = strtok(NULL, " ");
     }
+
+    fclose(fp);
 }
 
 void get_gpu(char **str){
@@ -244,6 +246,7 @@ void get_distro(char **distro_string){
     token[strcspn(token, "\n")] = 0;
 
     strcpy(*distro_string, token);
+    fclose(fp);
 }
 
 void get_shell(char **shell_string){
@@ -282,11 +285,13 @@ void get_wm (char **wm_string){
             for(int i = 0; i < 49; i++){
                 if(strstr(lookup, supported_wm[i]) != NULL){
                     strcpy(*wm_string, supported_wm[i]);
+                    fclose(fp);
                     return;
                 }
             }
         }
         strcpy(*wm_string, "Unknown");
+        fclose(fp);
     }
 }
 
@@ -322,6 +327,7 @@ void get_memory(char **mem_string){
     }
     sprintf(*mem_string, "%zi MiB / %zi MiB",
             (total_mem - free_mem - buffers) / 1024, total_mem / 1024);
+    fclose(fp);
 }
 
 void get_model(char **mem_string){
@@ -345,7 +351,8 @@ void get_model(char **mem_string){
     /* Strip off any newlines */
     tmp[strcspn(tmp, "\n")] = 0;
 
-    strcpy(*mem_string, tmp);   
+    strcpy(*mem_string, tmp);
+    fclose(fp);
 }
 
 void get_packages(char **pkg_string){
@@ -366,8 +373,14 @@ void get_packages(char **pkg_string){
         pm = "apk";
     else if (((fp = popen("opkg list-installed | wc -l", "r")) != NULL))
         pm = "opkg";
-    else if (((fp = popen("pacman-g2 | wc -l", "r")) != NULL))
+    else if (((fp = popen("pacman-g2 -Q | wc -l", "r")) != NULL))
         pm = "pacman-g2";
+    else if (((fp = popen("lvu installed | wc -l", "r")) != NULL))
+        pm = "lvu";
+    else if (((fp = popen("tce-status -i | wc -l", "r")) != NULL))
+        pm = "tce-status";
+    else if (((fp = popen("pkg_info | wc -l", "r")) != NULL))
+        pm = "pkg_info";
 
     if(fp == NULL){
        strcpy(*pkg_string, "Unknown");
@@ -378,4 +391,103 @@ void get_packages(char **pkg_string){
     tmp[strcspn(tmp, "\n")] = 0;
 
     sprintf(*pkg_string, "%s (%s)", tmp, pm);
+    pclose(fp);
+}
+
+void get_wm_theme (char **theme_string, char **wm_string){
+    FILE* fp;
+    if(strcmp(*wm_string, "E16"))
+        fp = popen("awk -F \"= \" '/theme.name/ {print $2}' \"${HOME}/.e16/e_config--0.0.cfg\"", "r");
+    else if(strcmp(*wm_string, "Sawfish"))
+        fp = popen("awk -F '\\\\(quote|\\\\)' '/default-frame-style/ {print $(NF-4)}' \"${HOME}/.sawfish/custom\"", "r");
+    else if(strcmp(*wm_string, "Cinnamon") || strcmp(*wm_string, "Muffin") || strcmp(*wm_string, "Mutter (Muffin)"))
+        fp = popen("(gsettings get org.cinnamon.theme name)", "r");
+    
+    if(fp == NULL){
+       strcpy(*theme_string, "Unknown");
+       return;
+    }
+
+    fgets(*theme_string, strlen(*theme_string), fp);
+    pclose(fp);
+}
+
+void get_gtk (char **gtk_string, char *name, char *gsettings){
+
+    /* Handles generic GTK2 themes */
+    FILE* fp;
+
+    char command_buffer[128];
+    char tmp_gtk2[128];
+    if ((fp = popen("cat ${GTK2_RC_FILES:-${HOME}/.gtkrc-2.0}", "r")) != NULL){
+        pclose(fp);
+        sprintf(command_buffer,
+                "echo $(grep \"^[^#]*%s\" \"${GTK2_RC_FILES:-${HOME}/.gtkrc-2.0}\")",
+                name);
+    }else if ((fp = popen("cat /etc/gtk-2.0/gtkrc" , "r")) != NULL){
+        pclose(fp);
+        sprintf(command_buffer,
+                "echo $(grep \"^[^#]*%s\" /etc/gtk-2.0/gtkrc)",
+                name);
+    }else if ((fp = popen("cat /usr/share/gtk-2.0/gtkrc" , "r")) != NULL){
+        pclose(fp);
+        sprintf(command_buffer,
+                "echo $(grep \"^[^#]*%s\" /usr/share/gtk-2.0/gtkrc)",
+                name);
+    }
+
+    if((fp = popen(command_buffer, "r")) != NULL){
+        fgets(tmp_gtk2, 127, fp);
+        rem_sub_str(tmp_gtk2, name);
+        rem_sub_str(tmp_gtk2, "\"");
+        rem_sub_str(tmp_gtk2, "=");
+        tmp_gtk2[strcspn(tmp_gtk2, "\n")] = 0;
+    }
+    pclose(fp);
+
+
+    /* Handles generic GTK3 themes */
+    char tmp_gtk3[128];
+    if ((fp = popen("cat ${HOME}/.config/gtk-3.0/settings.ini", "r")) != NULL){
+        pclose(fp);
+        sprintf(command_buffer,
+                "echo $(grep \"^[^#]*%s\" \"${HOME}/.config/gtk-3.0/settings.ini\")",
+                name);
+    }else if ((fp = popen("cat gsettings", "r")) != NULL){
+        pclose(fp);
+        sprintf(command_buffer,
+                "$(gsettings get org.gnome.desktop.interface \"%s\")",
+                gsettings);
+    }else if ((fp = popen("cat /usr/share/gtk-3.0/settings.ini", "r")) != NULL){
+        pclose(fp);
+        sprintf(command_buffer,
+                "echo $(grep \"^[^#]*%s\" \"${XDG_CONFIG_HOME}/gtk-3.0/settings.ini",
+                name);
+    }else if ((fp = popen("cat /etc/gtk-3.0/settings.ini", "r")) != NULL){
+        pclose(fp);
+        sprintf(command_buffer,
+                "echo $(grep \"^[^#]*%s\" /etc/gtk-3.0/settings.ini)",
+                name);
+    }
+
+    if((fp = popen(command_buffer, "r")) != NULL){
+        fgets(tmp_gtk3, 127, fp);
+        rem_sub_str(tmp_gtk3, name);
+        rem_sub_str(tmp_gtk3, "\"");
+        rem_sub_str(tmp_gtk3, "=");
+        tmp_gtk3[strcspn(tmp_gtk3, "\n")] = 0;
+    }
+    pclose(fp);
+
+    /* Join everything up. */
+    if (strcmp(tmp_gtk2, tmp_gtk3)){
+        strcat(tmp_gtk3, " [GTK2]");
+        strcat(tmp_gtk2, " [GTK3]");
+        sprintf(*gtk_string, "%s %s", tmp_gtk2, tmp_gtk3);
+    }else{
+        strcat(tmp_gtk2, " [GTK2/3]");
+        strcpy(*gtk_string, tmp_gtk2);
+    }
+
+
 }

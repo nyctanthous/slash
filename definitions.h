@@ -1,7 +1,7 @@
 #define ALDOS    0
 #define ALPINE   1
 #define ANTERGOS 2
-#define ARCHOLD  3
+#define ARCH_OLD 3
 #define ARCH     4
 
 #define DEFAULT "\e[39m"

@@ -8,14 +8,11 @@
 #include <getopt.h>
 #include "systeminfo.h"
 #include "definitions.h"
-
-
-#define put(index, char_array) (index >= 0? (char_array[index--]) : "")
+#include "logos.h"
 
 // Now, some globals we'll *probably* need to use.
 char hostname[HOST_NAME_MAX];
 char *user;
-char *uptime;
 char *gpu_string;
 char *wm_string;
 char *shell_string;
@@ -26,93 +23,9 @@ char *pkg_string;
 char *model_string;
 char *resolution_string;
 char *distro_string;
-char *distro;
+char *gtk_string;
 char *terminal_type;
 struct utsname unameData;
-
-void aldos_logo(char *c1, char *c2, char **info, int num_info_lines){
-    printf("%s                            %s\n", c1, put(num_info_lines, info));
-    printf("%s           # ## #           %s\n", c1, put(num_info_lines, info));
-    printf("%s        # ######## #        %s\n", c1, put(num_info_lines, info));
-    printf("%s      # ### ######## #      %s\n", c1, put(num_info_lines, info));
-    printf("%s     # #### ######### #     %s\n", c1, put(num_info_lines, info));
-    printf("%s   # #### # # # # #### #    %s\n", c1, put(num_info_lines, info));
-    printf("%s  # ##### #       ##### #   %s\n", c1, put(num_info_lines, info));
-    printf("%s   # ###### ##### #### #    %s\n", c1, put(num_info_lines, info));
-    printf("%s    # ############### #     %s\n", c1, put(num_info_lines, info));
-    printf("%s                            %s\n", c1, put(num_info_lines, info));
-    printf("%s         _ ___   ___  ___   %s\n", c2, put(num_info_lines, info));
-    printf("%s    __ _| |   \\ / _ \\/ __|  %s\n", c2, put(num_info_lines, info));
-    printf("%s   / _' | | |) | (_) \\__ \\  %s\n", c2, put(num_info_lines, info));
-    printf("%s   \\__,_|_|___/ \\___/|___/  %s\n", c2, put(num_info_lines, info));
-    printf("%s                            %s\n", c1, put(num_info_lines, info));
-    printf("%s                            %s\n", c1, put(num_info_lines, info));
-}
-
-void antergos_logo(char *c1, char *c2, char **info, int num_info_lines){
-    printf("%s              `.-/::/-``                  %s\n", c1, put(num_info_lines, info));
-    printf("%s             .-/osssssssso/.              %s\n",    c1, put(num_info_lines, info));
-    printf("%s            :osyysssssssyyys+-            %s\n",    c1, put(num_info_lines, info));
-    printf("%s         `.+yyyysssssssssyyyyy+.          %s\n",   c1, put(num_info_lines, info));
-    printf("%s        `/syyyyyssssssssssyyyyys-`        %s\n",  c1, put(num_info_lines, info));
-    printf("%s       `/yhyyyyysss%s++%sssosyyyyhhy/`        %s\n",  c1, c2, c1, put(num_info_lines, info));
-    printf("%s      .ohhhyyyys%so++/+o%sso%s+%ssyy%s+%sshhhho.      %s\n",  c1, c2, c1, c2, c1, c2, c1, put(num_info_lines, info));
-    printf("%s     .shhhhys%soo++//+%ssss%s+++%syyy%s+s%shhhhs.     %s\n",  c1, c2, c1, c2, c1, c2, c1, put(num_info_lines, info));
-    printf("%s    -yhhhhs%s+++++++o%sssso%s+++%syyy%ss+o%shhddy:    %s\n",  c1, c2, c1, c2, c1, c2, c1, put(num_info_lines, info));
-    printf("%s   -yddhhy%so+++++o%ssyyss%s++++%syyy%syooy%shdddy-   %s\n",  c1, c2, c1, c2, c1, c2, c1, put(num_info_lines, info));
-    printf("%s  .yddddhs%so++o%ssyyyyys%s+++++%syyhh%ssos%shddddy`  %s\n",  c1, c2, c1, c2, c1, c2, c1, put(num_info_lines, info));
-    printf("%s `odddddhyosyhyyyyyy%s++++++%syhhhyosddddddo  %s\n",  c1, c2, c1, put(num_info_lines, info));
-    printf("%s .dmdddddhhhhhhhyyyo%s+++++%sshhhhhohddddmmh. %s\n",  c1, c2, c1, put(num_info_lines, info));
-    printf("%s ddmmdddddhhhhhhhso%s++++++%syhhhhhhdddddmmdy %s\n",  c1, c2, c1, put(num_info_lines, info));
-    printf("%s dmmmdddddddhhhyso%s++++++%sshhhhhddddddmmmmh %s\n",  c1, c2, c1, put(num_info_lines, info));
-    printf("%s -dmmmdddddddhhys%so++++o%sshhhhdddddddmmmmd- %s\n",  c1, c2, c1, put(num_info_lines, info));
-    printf("%s .smmmmddddddddhhhhhhhhhdddddddddmmmms.   %s\n", c1, put(num_info_lines, info));
-    printf("%s    `+ydmmmdddddddddddddddddddmmmmdy/.    %s\n", c1, put(num_info_lines, info));
-    printf("%s       `.:+ooyyddddddddddddyyso+:.`       %s\n", c1, put(num_info_lines, info));
-}
-
-void archold_logo(char *c1, char *c2, char **info, int num_info_lines){
-    printf("%s              __                    %s\n", c1, put(num_info_lines, info));
-    printf("%s         _=(SDGJT=_                 %s\n", c1, put(num_info_lines, info));
-    printf("%s       _GTDJHGGFCVS)                %s\n", c1, put(num_info_lines, info));
-    printf("%s      ,GTDJGGDTDFBGX0               %s\n", c1, put(num_info_lines, info));
-    printf("%s     JDJDIJHRORVFSBSVL%s-=+=,_        %s\n", c1, c2, put(num_info_lines, info));
-    printf("%s    IJFDUFHJNXIXCDXDSV,%s  \\\"DEBL     %s\n", c1, c2, put(num_info_lines, info));
-    printf("%s   [LKDSDJTDU=OUSCSBFLD.%s   '?ZWX,   %s\n", c1, c2, put(num_info_lines, info));
-    printf("%s  ,LMDSDSWH'     \\`DCBOSI%s     DRDS],%s\n", c1, c2, put(num_info_lines, info));
-    printf("%s  SDDFDFH'         !YEWD,%s   )HDROD  %s\n", c1, c2, put(num_info_lines, info));
-    printf("%s !KMDOCG            &GSU|%s\\_GFHRGO\'  %s\n", c1, c2, put(num_info_lines, info));
-    printf("%s HKLSGP'%s           __%s\\TKM0%s\\GHRBV)'  %s\n", c1, c2, c1, c2, put(num_info_lines, info));
-    printf("%sJSNRVW'%s       __+MNAEC%s\\IOI,%s\\BN'     %s\n", c1, c2, c1, c2, put(num_info_lines, info));
-    printf("%sHELK['%s    __,=OFFXCBGHC%s\\FD)         %s\n", c1, c2, c1, put(num_info_lines, info));
-    printf("%s?KGHE %s\\_-#DASDFLSV='%s    'EF         %s\n", c1, c2, c1, put(num_info_lines, info));
-    printf("%s'EHTI                    !H         %s\n", c1, put(num_info_lines, info));
-    printf("%s \\`0F'                    '!        %s\n", c1, put(num_info_lines, info));
-    printf("%s                                    %s\n", c1, put(num_info_lines, info));
-    printf("%s                                  %s\n", c1, put(num_info_lines, info));
-}
-
-void arch_logo(char *c1, char *c2, char **info, int num_info_lines){
-    printf("%s                   -`                  %s\n", c1, put(num_info_lines, info));
-    printf("%s                  .o+`                 %s\n", c1, put(num_info_lines, info));
-    printf("%s                 `ooo/                 %s\n", c1, put(num_info_lines, info));
-    printf("%s                `+oooo:                %s\n", c1, put(num_info_lines, info));
-    printf("%s               `+oooooo:               %s\n", c1, put(num_info_lines, info));
-    printf("%s               -+oooooo+:              %s\n", c1, put(num_info_lines, info));
-    printf("%s             `/:-:++oooo+:             %s\n", c1, put(num_info_lines, info));
-    printf("%s            `/++++/+++++++:            %s\n", c1, put(num_info_lines, info));
-    printf("%s           `/++++++++++++++:           %s\n", c1, put(num_info_lines, info));
-    printf("%s          `/+++o%soooooooo%soooo/`         %s\n", c1, c2, c1, put(num_info_lines, info));
-    printf("%s         %s./%sooosssso++osssssso%s+`        %s\n", c2, c1, c2, c1, put(num_info_lines, info));
-    printf("%s        .oossssso-````/ossssss+`       %s\n", c2, put(num_info_lines, info));
-    printf("%s       -osssssso.      :ssssssso.      %s\n", c2, put(num_info_lines, info));
-    printf("%s      :osssssss/        osssso+++.     %s\n", c2, put(num_info_lines, info));
-    printf("%s     /ossssssss/        +ssssooo/-     %s\n", c2, put(num_info_lines, info));
-    printf("%s   `/ossssso+/:-        -:/+osssso+-   %s\n", c2, put(num_info_lines, info));
-    printf("%s  `+sso+:-`                 `.-/+oso:  %s\n", c2, put(num_info_lines, info));
-    printf("%s `++:.                           `-/+/ %s\n", c2, put(num_info_lines, info));
-    printf("%s .`                                 `/ %s\n", c2, put(num_info_lines, info));
-}
 
 void string_replacer(char **str, char *symbol, char *color){
     if (strstr(*str, symbol))
@@ -240,6 +153,14 @@ void add_to_list(char ***list, int *arr_len, int *index, char* str){
         get_memory(&memory_string);
         str = replace_str(str, "\%ram_widget", memory_string);
     }
+    if (strstr(str, "\%gtk_theme")){
+        get_gtk(&memory_string, "gtk-theme-name", "gtk-theme");
+        str = replace_str(str, "\%gtk_theme", memory_string);
+    }
+    if (strstr(str, "\%gtk_icons")){
+        get_gtk(&memory_string, "gtk-icon-theme-name", "icon-theme");
+        str = replace_str(str, "\%gtk_icons", memory_string);
+    }
     
     if (*arr_len > *index){
         (*list)[*index] = (char*)malloc(180 * sizeof(char));
@@ -275,6 +196,27 @@ void read_configs(char *filename, char ***user_string, int *arr_len){
     *arr_len = index - 1;
 }
 
+int get_os_code(char **distro){
+    get_distro(distro);
+
+    /* Now, convert to lowercase. */
+    for(int i = 0; i < strlen(*distro); i++){
+        (*distro)[i] |= 32;
+    }
+
+    if(strstr(*distro, "aldos"))
+        return ALDOS;
+    if(strstr(*distro, "antergos"))
+        return ANTERGOS;
+    if(strstr(*distro, "alpine"))
+        return ALPINE;
+    if(strstr(*distro, "arch"))
+        return ARCH;
+
+    return 1;
+
+}
+
 int main (int argc, char *argv[]){
     gpu_string = malloc(128);
     cpu_string = malloc(128);
@@ -285,31 +227,18 @@ int main (int argc, char *argv[]){
     shell_string = malloc(128);
     memory_string = malloc(128);
     model_string = malloc(256);
+    gtk_string = malloc(128);
     pkg_string = malloc(256);
 
-    static struct option long_options[] = {
-        {"aldos",      no_argument,  0, ALDOS },
-        {"antergos",   no_argument,  0, ANTERGOS },
-        {"alpine",     no_argument,  0, ALPINE },
-        {"archold",    no_argument,  0, ARCHOLD },
-        {"arch",       no_argument,  0, ARCH },
-        {0,           0,             0, 0 }
-    };
+    gtk_string[127] = 0;
+
 
     static void (*logo_lookup[13]) (char *, char *, char **, int);
     logo_lookup[ALDOS]    = &aldos_logo;
     logo_lookup[ANTERGOS] = &antergos_logo;
-    logo_lookup[ARCHOLD]  = &archold_logo;
+    logo_lookup[ARCH_OLD] = &arch_old_logo;
     logo_lookup[ARCH]     = &arch_logo;
 
-    int opt= 0;
-    int long_index = 0;
-
-    opt = getopt_long_only(argc, argv,"", long_options, &long_index);
-    if (opt < 0){
-        printf("Please add a command line argument for the OS.\n");
-        return -1;
-    }
 
     /* Start with 20 options, resize if larger. */
     int len = 24;
@@ -330,7 +259,9 @@ int main (int argc, char *argv[]){
     }
 
     /* Actually print the logo and info */
-    logo_lookup[opt](lead_color, second_color, user_string, len);
+    printf("\n");
+    int os_code = get_os_code(&distro_string);
+    logo_lookup[os_code](lead_color, second_color, user_string, len);
     printf("%s%s\n", DEFAULT, BG_DEFAULT);
 
     /* Free up everything. */
@@ -345,6 +276,8 @@ int main (int argc, char *argv[]){
     free(model_string);
     free(pkg_string);
 
-    // MAY NOT BE FREE'D CORRECTLY
+    for(int i = 0; i < len; i++){
+        free(user_string[i]);
+    }
     free(user_string);
 }
