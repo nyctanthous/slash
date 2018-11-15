@@ -212,8 +212,70 @@ int get_os_code(char **distro){
         return ALPINE;
     if(strstr(*distro, "arch"))
         return ARCH;
+    if(strstr(*distro, "artix"))
+        return ARTIX;
+    if(strstr(*distro, "arya"))
+        return ARYA;
+    if(strstr(*distro, "bitrig"))
+        return BITRIG;
+    if(strstr(*distro, "BLAG"))
+        return BLAG;
+    if(strstr(*distro, "BlankOn"))
+        return BLANK_ON;
+    if(strstr(*distro, "BSD"))
+        return BSD;
+    if(strstr(*distro, "BunsenLabs"))
+        return BUNSEN_LABS;
+    if(strstr(*distro, "Calculate"))
+        return CALCULATE;
+    if(strstr(*distro, "CentOS"))
+        return CENT_OS;
+    if(strstr(*distro, "Chakra"))
+        return CHAKRA;
+    if(strstr(*distro, "ChaletOS"))
+        return CHALET_OS;
+    if(strstr(*distro, "Chapeau"))
+        return CHAPEAU;
+    if(strstr(*distro, "Chrom"))
+        return CHROM;
+    if(strstr(*distro, "ClearOS"))
+        return CLEAR_OS;
+    if(strstr(*distro, "Clover"))
+        return CLOVER;
+    if(strstr(*distro, "Condres"))
+        return CONDRES;
+    if(strstr(*distro, "CRUX"))
+        return CRUX;
+    if(strstr(*distro, "Debian"))
+        return DEBIAN;
+    if(strstr(*distro, "Deepin"))
+        return DEEPIN;
+    if(strstr(*distro, "DesaOS"))
+        return DESA_OS;
+    if(strstr(*distro, "Devuan"))
+        return DEVUAN;
+    if(strstr(*distro, "DracOS"))
+        return DRAC_OS;
+    if(strstr(*distro, "DragonFly"))
+        return DRAGONFLY;
+    if(strstr(*distro, "ELEMENTARY"))
+        return ELEMENTARY;
+    if(strstr(*distro, "Endless"))
+        return ENDLESS;
+    if(strstr(*distro, "Exherbo"))
+        return EXHERBO;
+    if(strstr(*distro, "Fedora") || strstr(*distro, "RFRemix"))
+        return FEDORA;
+    if(strstr(*distro, "FreeBSD"))
+        return FREE_BSD;
+    if(strstr(*distro, "Frugalware"))
+        return FRUGALWARE;
+    
+    if(strstr(*distro, "Ubuntu"))
+        return UBUNTU;
 
-    return 1;
+    /* No ASCII art. */
+    return -1;
 
 }
 
