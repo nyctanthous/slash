@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "asprintf.h"
 
 // Code courtesy rofl on StackOverflow:
 // https://codereview.stackexchange.com/questions/67055/fastest-way-of-removing-a-substring-from-a-string
@@ -65,10 +66,10 @@ char *replace_str(const char *s, const char *oldW,
 // 1 - Remove TM, R, C.
 // 2 - Drop manufacturer name altogether.
 void get_cpu_model(int length_mode, char **cpu_string){
-   FILE *cpuinfo = fopen("/proc/cpuinfo", "rb");
-   char *arg = 0;
-   char *token;
-   size_t size = 0;
+    FILE *cpuinfo = fopen("/proc/cpuinfo", "rb");
+    char *arg = 0;
+    char *token;
+    size_t size = 0;
 
     getdelim(&arg, &size, 0, cpuinfo);
 
@@ -84,7 +85,7 @@ void get_cpu_model(int length_mode, char **cpu_string){
     cpu_name = strtok(NULL, ":");
     *cpu_name++;
 
-    strcpy(*cpu_string, cpu_name);
+    asprintf(cpu_string, cpu_name);
 
     rem_sub_str(*cpu_string, "CPU ");
     if(length_mode > 0){
@@ -179,7 +180,7 @@ void get_gpu(char **str){
             /* Remove end */
             token[strcspn(token, "]")] = 0;
 
-            sprintf(*str, "%s %s", manufacturer, token);
+            asprintf(str, "%s %s", manufacturer, token);
             
             break;
         }
@@ -216,15 +217,15 @@ void get_uptime(int length_mode, char **uptime_str){
     ret -= min * 60;
 
     if (!length_mode)
-        sprintf(*uptime_str, "%d days, %d hours, %d mins, %ld secs", days, hours, min, ret);
+        asprintf(uptime_str, "%d days, %d hours, %d mins, %ld secs", days, hours, min, ret);
     else if (length_mode == 1)
-        sprintf(*uptime_str, "%d days, %d hours, %d mins", days, hours, min);
+        asprintf(uptime_str, "%d days, %d hours, %d mins", days, hours, min);
     else if (length_mode == 2)
-        sprintf(*uptime_str, "%d days, %d hours", days, hours);
+        asprintf(uptime_str, "%d days, %d hours", days, hours);
     else if (length_mode == 3)
-        sprintf(*uptime_str, "%d hours", hours);
+        asprintf(uptime_str, "%d hours", hours);
     else if (length_mode == 4)
-        sprintf(*uptime_str, "%dd %dh %dm", days, hours, min);
+        asprintf(uptime_str, "%dd %dh %dm", days, hours, min);
 }
 
 void get_distro(char **distro_string){
@@ -245,17 +246,17 @@ void get_distro(char **distro_string){
     /* Strip off any newlines */
     token[strcspn(token, "\n")] = 0;
 
-    strcpy(*distro_string, token);
+    asprintf(distro_string, token);
     fclose(fp);
 }
 
 void get_shell(char **shell_string){
-    strcpy(*shell_string, getenv("SHELL"));
+    asprintf(shell_string, getenv("SHELL"));
 }
 
 void get_wm (char **wm_string){
     /* Ideally, call GDMSESSION to get the wm. */
-    strcpy(*wm_string, getenv("GDMSESSION"));
+    asprintf(wm_string, getenv("GDMSESSION"));
 
     /* Fallback: seach through all processes. */
     if(!strlen(*wm_string)){
@@ -284,13 +285,13 @@ void get_wm (char **wm_string){
         while (fgets(lookup, sizeof(lookup) - 1, fp) != NULL) {
             for(int i = 0; i < 49; i++){
                 if(strstr(lookup, supported_wm[i]) != NULL){
-                    strcpy(*wm_string, supported_wm[i]);
+                    asprintf(wm_string, supported_wm[i]);
                     fclose(fp);
                     return;
                 }
             }
         }
-        strcpy(*wm_string, "Unknown");
+        asprintf(wm_string, "Unknown");
         fclose(fp);
     }
 }
@@ -325,12 +326,12 @@ void get_memory(char **mem_string){
             cached = strtol(token, &ptr, 10);
         }
     }
-    sprintf(*mem_string, "%zi MiB / %zi MiB",
+    asprintf(mem_string, "%zi MiB / %zi MiB",
             (total_mem - free_mem - buffers) / 1024, total_mem / 1024);
     fclose(fp);
 }
 
-void get_model(char **mem_string){
+void get_model(char **model_string){
     char tmp[128];
 
     FILE* fp;
@@ -341,17 +342,16 @@ void get_model(char **mem_string){
     else if (((fp = fopen("tmp/sysinfo/model", "r")) != NULL)){}
 
     if(fp == NULL){
-       strcpy(*mem_string, "Unknown");
+       asprintf(model_string, "Unknown");
        return;
     }
-
     
     fgets(tmp, 127, fp);
 
     /* Strip off any newlines */
     tmp[strcspn(tmp, "\n")] = 0;
 
-    strcpy(*mem_string, tmp);
+    asprintf(model_string, tmp);
     fclose(fp);
 }
 
@@ -383,14 +383,14 @@ void get_packages(char **pkg_string){
         pm = "pkg_info";
 
     if(fp == NULL){
-       strcpy(*pkg_string, "Unknown");
+       asprintf(pkg_string, "Unknown");
        return;
     }
 
     fgets(tmp, 127, fp);
     tmp[strcspn(tmp, "\n")] = 0;
 
-    sprintf(*pkg_string, "%s (%s)", tmp, pm);
+    asprintf(pkg_string, "%s (%s)", tmp, pm);
     pclose(fp);
 }
 
@@ -404,7 +404,7 @@ void get_wm_theme (char **theme_string, char **wm_string){
         fp = popen("(gsettings get org.cinnamon.theme name)", "r");
     
     if(fp == NULL){
-       strcpy(*theme_string, "Unknown");
+       asprintf(theme_string, "Unknown");
        return;
     }
 

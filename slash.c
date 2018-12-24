@@ -156,12 +156,12 @@ void add_to_list(char ***list, int *arr_len, int *index, char* str){
         str = replace_str(str, "\%ram_widget", memory_string);
     }
     if (strstr(str, "\%gtk_theme")){
-        get_gtk(&memory_string, "gtk-theme-name", "gtk-theme");
-        str = replace_str(str, "\%gtk_theme", memory_string);
+        get_gtk(&gtk_string, "gtk-theme-name", "gtk-theme");
+        str = replace_str(str, "\%gtk_theme", gtk_string);
     }
     if (strstr(str, "\%gtk_icons")){
-        get_gtk(&memory_string, "gtk-icon-theme-name", "icon-theme");
-        str = replace_str(str, "\%gtk_icons", memory_string);
+        get_gtk(&gtk_string, "gtk-icon-theme-name", "icon-theme");
+        str = replace_str(str, "\%gtk_icons", gtk_string);
     }
     
     if (*arr_len > *index){
@@ -218,6 +218,8 @@ char** (*get_os_code(char **distro))(char *, char *, char **, int){
 
 }
 
+/* Figure out how long strings should be to fit onscreen
+   by doing strlen and ignoring the escape sequences. */
 int count_special(char *str, int target_length){
     int i = 0;
     for(int pos = 0; pos < target_length; i++){
@@ -234,19 +236,10 @@ int count_special(char *str, int target_length){
 
 
 int main (int argc, char *argv[]){
-    gpu_string = malloc(128);
-    cpu_string = malloc(128);
-    wm_string = malloc(64);
-    distro_string = malloc(64);
+    /* Current implementations of getresoultion,
+       gtk, do not use asprintf. */
     resolution_string = malloc(128);
-    uptime_string = malloc(128);
-    shell_string = malloc(128);
-    memory_string = malloc(128);
-    model_string = malloc(256);
     gtk_string = malloc(128);
-    pkg_string = malloc(256);
-
-    gtk_string[127] = 0;
 
     /* Get the window size */
     struct winsize w;
@@ -293,6 +286,10 @@ int main (int argc, char *argv[]){
 
     for(int i = 0; i < len; i++){
         free(user_string[i]);
+    }
+
+    for(int i = 0; out[i] != 0; i++){
+        free(out[i]);
     }
     free(user_string);
 }

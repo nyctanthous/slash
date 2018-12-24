@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "asprintf.h"
 #define put(index, char_array) (index >= 0? (char_array[index--]) : "")
