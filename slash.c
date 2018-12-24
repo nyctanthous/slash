@@ -6,6 +6,8 @@
 #include <sys/sysinfo.h>
 #include <sys/utsname.h>
 #include <getopt.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
 #include "systeminfo.h"
 #include "definitions.h"
 #include "logos.h"
@@ -196,7 +198,7 @@ void read_configs(char *filename, char ***user_string, int *arr_len){
     *arr_len = index - 1;
 }
 
-int get_os_code(char **distro){
+char** (*get_os_code(char **distro))(char *, char *, char **, int){
     get_distro(distro);
 
     /* Now, convert to lowercase. */
@@ -205,79 +207,31 @@ int get_os_code(char **distro){
     }
 
     if(strstr(*distro, "aldos"))
-        return ALDOS;
+        return aldos_logo;
     if(strstr(*distro, "antergos"))
-        return ANTERGOS;
-    if(strstr(*distro, "alpine"))
-        return ALPINE;
+        return antergos_logo;
     if(strstr(*distro, "arch"))
-        return ARCH;
-    if(strstr(*distro, "artix"))
-        return ARTIX;
-    if(strstr(*distro, "arya"))
-        return ARYA;
-    if(strstr(*distro, "bitrig"))
-        return BITRIG;
-    if(strstr(*distro, "BLAG"))
-        return BLAG;
-    if(strstr(*distro, "BlankOn"))
-        return BLANK_ON;
-    if(strstr(*distro, "BSD"))
-        return BSD;
-    if(strstr(*distro, "BunsenLabs"))
-        return BUNSEN_LABS;
-    if(strstr(*distro, "Calculate"))
-        return CALCULATE;
-    if(strstr(*distro, "CentOS"))
-        return CENT_OS;
-    if(strstr(*distro, "Chakra"))
-        return CHAKRA;
-    if(strstr(*distro, "ChaletOS"))
-        return CHALET_OS;
-    if(strstr(*distro, "Chapeau"))
-        return CHAPEAU;
-    if(strstr(*distro, "Chrom"))
-        return CHROM;
-    if(strstr(*distro, "ClearOS"))
-        return CLEAR_OS;
-    if(strstr(*distro, "Clover"))
-        return CLOVER;
-    if(strstr(*distro, "Condres"))
-        return CONDRES;
-    if(strstr(*distro, "CRUX"))
-        return CRUX;
-    if(strstr(*distro, "Debian"))
-        return DEBIAN;
-    if(strstr(*distro, "Deepin"))
-        return DEEPIN;
-    if(strstr(*distro, "DesaOS"))
-        return DESA_OS;
-    if(strstr(*distro, "Devuan"))
-        return DEVUAN;
-    if(strstr(*distro, "DracOS"))
-        return DRAC_OS;
-    if(strstr(*distro, "DragonFly"))
-        return DRAGONFLY;
-    if(strstr(*distro, "ELEMENTARY"))
-        return ELEMENTARY;
-    if(strstr(*distro, "Endless"))
-        return ENDLESS;
-    if(strstr(*distro, "Exherbo"))
-        return EXHERBO;
-    if(strstr(*distro, "Fedora") || strstr(*distro, "RFRemix"))
-        return FEDORA;
-    if(strstr(*distro, "FreeBSD"))
-        return FREE_BSD;
-    if(strstr(*distro, "Frugalware"))
-        return FRUGALWARE;
-    
-    if(strstr(*distro, "Ubuntu"))
-        return UBUNTU;
+        return arch_logo;
 
     /* No ASCII art. */
-    return -1;
+    return NULL;
 
 }
+
+int count_special(char *str, int target_length){
+    int i = 0;
+    for(int pos = 0; pos < target_length; i++){
+        if (str[i] == '\e' && str[i + 1] == '['){
+            if (str[i + 4] == 'm')
+                i += 5;
+            else if (str[i + 5] == 'm')
+                i += 6;
+        }
+        pos++;
+    }
+    return i;
+}
+
 
 int main (int argc, char *argv[]){
     gpu_string = malloc(128);
@@ -294,12 +248,9 @@ int main (int argc, char *argv[]){
 
     gtk_string[127] = 0;
 
-
-    static void (*logo_lookup[13]) (char *, char *, char **, int);
-    logo_lookup[ALDOS]    = &aldos_logo;
-    logo_lookup[ANTERGOS] = &antergos_logo;
-    logo_lookup[ARCH_OLD] = &arch_old_logo;
-    logo_lookup[ARCH]     = &arch_logo;
+    /* Get the window size */
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
 
     /* Start with 20 options, resize if larger. */
@@ -322,9 +273,11 @@ int main (int argc, char *argv[]){
 
     /* Actually print the logo and info */
     printf("\n");
-    int os_code = get_os_code(&distro_string);
-    logo_lookup[os_code](lead_color, second_color, user_string, len);
-    printf("%s%s\n", DEFAULT, BG_DEFAULT);
+    char **out = get_os_code(&distro_string)(lead_color, second_color, user_string, len);
+    for(int i = 0; out[i] != 0; i++){
+        /* Terminal commands don't count. */
+        printf("%.*s%s%s\n", count_special(out[i], w.ws_col), out[i], DEFAULT, BG_DEFAULT);
+    }
 
     /* Free up everything. */
     free(gpu_string);
