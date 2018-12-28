@@ -1,4 +1,4 @@
-/d  ?y-----------┳----┫ ?d%user ?y┣-┫ ?d%host ?y┃
+/d  ?y━━━━━━━━━━━┳━━━━━━━━┫ ?d%user ?y┣━┫ ?d%host ?y┃
 /d  ?bOS         ?y┃ ?d%distro
 /d  ?bHost       ?y┃ ?d%model
 /d  ?bKernel     ?y┃ ?d%kernel
@@ -13,6 +13,6 @@
 /d  ?bCPU        ?y┃ ?d%s-cpu
 /d  ?bGPU        ?y┃ ?d%gpu
 /d  ?bMemory     ?y┃ ?d%ram_widget
-/d  ?y-----------┻----------------------
-/d  /l     /r    /g     /y    /b     /m    /c     \q    /d
-/d  /q     \r    \g     \y    \b     \m    \c     /w    /d
+/d  ?y━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━
+/d  /l     /r    /g     /y    /b     /m    /c     /lq    /d
+/d  /q     /lr    /lg     /ly    /lb     /lm    /lc     /w    /d

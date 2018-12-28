@@ -30,16 +30,16 @@ char *replace_str(const char *s, const char *oldW,
     char *result; 
     int i, cnt = 0; 
     int newWlen = strlen(newW); 
-    int oldWlen = strlen(oldW); 
+    int oldWlen = strlen(oldW);
   
     // Counting the number of times the old word 
     // occur in the string 
-    for (i = 0; s[i] != '\0'; i++) { 
-        if (strstr(&s[i], oldW) == &s[i]){ 
+    for (i = 0; s[i] != '\0'; i++) {
+        if (strstr(s + i, oldW) == &s[i]){
             cnt++; 
   
             // Jumping to index after the old word. 
-            i += oldWlen - 1; 
+            i += oldWlen; 
         }
     }
   
@@ -51,8 +51,8 @@ char *replace_str(const char *s, const char *oldW,
         // compare the substring with the result 
         if (strstr(s, oldW) == s){ 
             strcpy(&result[i], newW); 
-            i += newWlen; 
-            s += oldWlen; 
+            i += newWlen;
+            s += oldWlen;
         } 
         else
             result[i++] = *s++; 

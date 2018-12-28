@@ -11,6 +11,7 @@
 #include "systeminfo.h"
 #include "definitions.h"
 #include "logos.h"
+#include "asprintf.h"
 
 // Now, some globals we'll *probably* need to use.
 char hostname[HOST_NAME_MAX];
@@ -34,147 +35,140 @@ void string_replacer(char **str, char *symbol, char *color){
         *str = replace_str(*str, symbol, color);
 }
 
-void add_to_list(char ***list, int *arr_len, int *index, char* str){
-    // First, add foreground color escape sequences.
-    string_replacer(&str, "?b", BLUE);
-    string_replacer(&str, "?r", RED);
-    string_replacer(&str, "?l", BLACK);
-    string_replacer(&str, "?q", DARK_GRAY);
-    string_replacer(&str, "?w", WHITE);
-    string_replacer(&str, "?c", CYAN);
-    string_replacer(&str, "?y", YELLOW);
-    string_replacer(&str, "?m", MAGENTA);
-    string_replacer(&str, "?d", DEFAULT);
-
+void string_fill(char **str){
     // Add light foreground color escape sequences.
-    string_replacer(&str, "$q", LIGHT_GRAY);
-    string_replacer(&str, "$b", LIGHT_BLUE);
-    string_replacer(&str, "$r", LIGHT_RED);
-    string_replacer(&str, "$c", LIGHT_CYAN);
-    string_replacer(&str, "$y", LIGHT_YELLOW);
-    string_replacer(&str, "$m", LIGHT_MAGENTA);
+    string_replacer(str, "?lq", LIGHT_GRAY);
+    string_replacer(str, "?lb", LIGHT_BLUE);
+    string_replacer(str, "?lr", LIGHT_RED);
+    string_replacer(str, "?lc", LIGHT_CYAN);
+    string_replacer(str, "?ly", LIGHT_YELLOW);
+    string_replacer(str, "?lm", LIGHT_MAGENTA);
 
-    // Then, add background color escape sequences.
-    string_replacer(&str, "/b", BG_BLUE);
-    string_replacer(&str, "/g", BG_GREEN);
-    string_replacer(&str, "/r", BG_RED);
-    string_replacer(&str, "/l", BG_BLACK);
-    string_replacer(&str, "/c", BG_CYAN);
-    string_replacer(&str, "/y", BG_YELLOW);
-    string_replacer(&str, "/m", BG_MAGENTA);
-    string_replacer(&str, "/w", BG_WHITE);
-    string_replacer(&str, "/q", BG_DARK_GRAY);
-    string_replacer(&str, "/d", BG_DEFAULT);
+    // Now, add normal foreground color escape sequences.
+    string_replacer(str, "?b", BLUE);
+    string_replacer(str, "?r", RED);
+    string_replacer(str, "?l", BLACK);
+    string_replacer(str, "?q", DARK_GRAY);
+    string_replacer(str, "?w", WHITE);
+    string_replacer(str, "?c", CYAN);
+    string_replacer(str, "?y", YELLOW);
+    string_replacer(str, "?m", MAGENTA);
+    string_replacer(str, "?d", DEFAULT);
 
     // Add light background color escape sequences.
-    string_replacer(&str, "\\b", BG_LIGHT_BLUE);
-    string_replacer(&str, "\\g", BG_LIGHT_GREEN);
-    string_replacer(&str, "\\r", BG_LIGHT_RED);
-    string_replacer(&str, "\\c", BG_LIGHT_CYAN);
-    string_replacer(&str, "\\y", BG_LIGHT_YELLOW);
-    string_replacer(&str, "\\m", BG_LIGHT_MAGENTA);
-    string_replacer(&str, "\\q", BG_LIGHT_GRAY);
+    string_replacer(str, "/lb", BG_LIGHT_BLUE);
+    string_replacer(str, "/lg", BG_LIGHT_GREEN);
+    string_replacer(str, "/lr", BG_LIGHT_RED);
+    string_replacer(str, "/lc", BG_LIGHT_CYAN);
+    string_replacer(str, "/ly", BG_LIGHT_YELLOW);
+    string_replacer(str, "/lm", BG_LIGHT_MAGENTA);
+    string_replacer(str, "/lq", BG_LIGHT_GRAY);
 
-    if (strstr(str, "\%host")){
+    // Then, add background color escape sequences.
+    string_replacer(str, "/b", BG_BLUE);
+    string_replacer(str, "/g", BG_GREEN);
+    string_replacer(str, "/r", BG_RED);
+    string_replacer(str, "/l", BG_BLACK);
+    string_replacer(str, "/c", BG_CYAN);
+    string_replacer(str, "/y", BG_YELLOW);
+    string_replacer(str, "/m", BG_MAGENTA);
+    string_replacer(str, "/w", BG_WHITE);
+    string_replacer(str, "/q", BG_DARK_GRAY);
+    string_replacer(str, "/d", BG_DEFAULT);
+
+    /* Look for special info symbols. */
+    if (strstr(*str, "\%host")){
         gethostname(hostname, HOST_NAME_MAX);
-        str = replace_str(str, "\%host", hostname);
+        *str = replace_str(*str, "\%host", hostname);
     }
-    if (strstr(str, "\%user")){
+    if (strstr(*str, "\%user")){
         user = getlogin();
-        str = replace_str(str, "\%user", user);
+        *str = replace_str(*str, "\%user", user);
     }
-    if (strstr(str, "\%kernel")){
+    if (strstr(*str, "\%kernel")){
         uname(&unameData);
-        str = replace_str(str, "\%kernel", unameData.release);
+        *str = replace_str(*str, "\%kernel", unameData.release);
     }
-    if (strstr(str, "\%gpu")){
+    if (strstr(*str, "\%gpu")){
         get_gpu(&gpu_string);
-        str = replace_str(str, "\%gpu", gpu_string);
+        *str = replace_str(*str, "\%gpu", gpu_string);
     }
-    if (strstr(str, "\%l-cpu")){
+    if (strstr(*str, "\%l-cpu")){
         get_cpu_model(0, &cpu_string);
-        str = replace_str(str, "\%l-cpu", cpu_string);
+        *str = replace_str(*str, "\%l-cpu", cpu_string);
     }
-    if (strstr(str, "\%cpu")){
+    if (strstr(*str, "\%cpu")){
         get_cpu_model(1, &cpu_string);
-        str = replace_str(str, "\%cpu", cpu_string);
+        *str = replace_str(*str, "\%cpu", cpu_string);
     }
-    if (strstr(str, "\%s-cpu")){
+    if (strstr(*str, "\%s-cpu")){
         get_cpu_model(2, &cpu_string);
-        str = replace_str(str, "\%s-cpu", cpu_string);
+        *str = replace_str(*str, "\%s-cpu", cpu_string);
     }
-    if (strstr(str, "\%ls-uptime")){
+    if (strstr(*str, "\%ls-uptime")){
         get_uptime(0, &uptime_string);
-        str = replace_str(str, "\%ls-uptime", uptime_string);
+        *str = replace_str(*str, "\%ls-uptime", uptime_string);
     }
-    if (strstr(str, "\%lm-uptime")){
+    if (strstr(*str, "\%lm-uptime")){
         get_uptime(1, &uptime_string);
-        str = replace_str(str, "\%lm-uptime", uptime_string);
+        *str = replace_str(*str, "\%lm-uptime", uptime_string);
     }
-    if (strstr(str, "\%lh-uptime")){
+    if (strstr(*str, "\%lh-uptime")){
         get_uptime(2, &uptime_string);
-        str = replace_str(str, "\%lh-uptime", uptime_string);
+        *str = replace_str(*str, "\%lh-uptime", uptime_string);
     }
-    if (strstr(str, "\%ld-uptime")){
+    if (strstr(*str, "\%ld-uptime")){
         get_uptime(3, &uptime_string);
-        str = replace_str(str, "\%ld-uptime", uptime_string);
+        *str = replace_str(*str, "\%ld-uptime", uptime_string);
     }
-    if (strstr(str, "\%s-uptime")){
+    if (strstr(*str, "\%s-uptime")){
         get_uptime(4, &uptime_string);
-        str = replace_str(str, "\%s-uptime", uptime_string);
+        *str = replace_str(*str, "\%s-uptime", uptime_string);
     }
-    if (strstr(str, "\%distro")){
+    if (strstr(*str, "\%distro")){
         get_distro(&distro_string);
-        str = replace_str(str, "\%distro", distro_string);
+        *str = replace_str(*str, "\%distro", distro_string);
     }
-    if (strstr(str, "\%wm")){
+    if (strstr(*str, "\%wm")){
         get_wm(&wm_string);
-        str = replace_str(str, "\%wm", wm_string);
+        *str = replace_str(*str, "\%wm", wm_string);
     }
-    if (strstr(str, "\%terminal_type")){
+    if (strstr(*str, "\%terminal_type")){
         terminal_type = getenv("TERM");
-        str = replace_str(str, "\%terminal_type", terminal_type);
+        *str = replace_str(*str, "\%terminal_type", terminal_type);
     }
-    if (strstr(str, "\%resolution")){
+    if (strstr(*str, "\%resolution")){
         get_resolution(&resolution_string);
-        str = replace_str(str, "\%resolution", resolution_string);
+        *str = replace_str(*str, "\%resolution", resolution_string);
     }
-    if (strstr(str, "\%model")){
+    if (strstr(*str, "\%model")){
         get_model(&model_string);
-        str = replace_str(str, "\%model", model_string);
+        *str = replace_str(*str, "\%model", model_string);
     }
-    if (strstr(str, "\%shell")){
+    if (strstr(*str, "\%shell")){
         get_shell(&shell_string);
-        str = replace_str(str, "\%shell", shell_string);
+        *str = replace_str(*str, "\%shell", shell_string);
     }
-    if (strstr(str, "\%pkg")){
+    if (strstr(*str, "\%pkg")){
         get_packages(&pkg_string);
-        str = replace_str(str, "\%pkg", pkg_string);
+        *str = replace_str(*str, "\%pkg", pkg_string);
     }
-    if (strstr(str, "\%ram_widget")){
+    if (strstr(*str, "\%ram_widget")){
         get_memory(&memory_string);
-        str = replace_str(str, "\%ram_widget", memory_string);
+        *str = replace_str(*str, "\%ram_widget", memory_string);
     }
-    if (strstr(str, "\%gtk_theme")){
+    if (strstr(*str, "\%gtk_theme")){
         get_gtk(&gtk_string, "gtk-theme-name", "gtk-theme");
-        str = replace_str(str, "\%gtk_theme", gtk_string);
+        *str = replace_str(*str, "\%gtk_theme", gtk_string);
     }
-    if (strstr(str, "\%gtk_icons")){
+    if (strstr(*str, "\%gtk_icons")){
         get_gtk(&gtk_string, "gtk-icon-theme-name", "icon-theme");
-        str = replace_str(str, "\%gtk_icons", gtk_string);
+        *str = replace_str(*str, "\%gtk_icons", gtk_string);
     }
-    
-    if (*arr_len > *index){
-        (*list)[*index] = (char*)malloc(180 * sizeof(char));
-        strncpy((*list)[*index], str, 179);
-        (*index)++;
-    }
-    else
-        // Resizing code
-        printf("Resize Here");
 }
 
 
+/* Parse the configuration file */
 void read_configs(char *filename, char ***user_string, int *arr_len){
     FILE *fp;
     char *line = NULL;
@@ -182,13 +176,19 @@ void read_configs(char *filename, char ***user_string, int *arr_len){
     size_t len = 0;
 
     fp = fopen(filename, "r");
-    if (fp == NULL)
+    if (fp == NULL){
+        printf("Could not read configuration file!\n");
         exit(EXIT_FAILURE);
+    }
 
     while (getline(&line, &len, fp) != -1) {
-        // Strip off any newlines
+        /* Strip off any newlines */
         line[strcspn(line, "\n")] = 0;
-        add_to_list(user_string, arr_len, &index, line);
+
+        /* Add the line to our 2D array */
+        (* user_string)[index] = malloc((strlen(line) + 1) * sizeof(char));
+        memcpy((* user_string)[index], line, strlen(line) + 1);
+        index++;
     }
 
     fclose(fp);
@@ -198,9 +198,7 @@ void read_configs(char *filename, char ***user_string, int *arr_len){
     *arr_len = index - 1;
 }
 
-char** (*get_os_code(char **distro))(char *, char *, char **, int){
-    get_distro(distro);
-
+char ** (* get_os_code(char **distro))(char *, char *, char **, int){
     /* Now, convert to lowercase. */
     for(int i = 0; i < strlen(*distro); i++){
         (*distro)[i] |= 32;
@@ -208,10 +206,23 @@ char** (*get_os_code(char **distro))(char *, char *, char **, int){
 
     if(strstr(*distro, "aldos"))
         return aldos_logo;
+    if(strstr(*distro, "alpine"))
+        return alpine_logo;
     if(strstr(*distro, "antergos"))
         return antergos_logo;
+    if(strstr(*distro, "archold"))
+        return arch_old_logo;
     if(strstr(*distro, "arch"))
         return arch_logo;
+    
+    if(strstr(*distro, "linux"))
+        return tux;
+    
+    if(strstr(*distro, "mint"))
+        return mint_logo;
+
+    if(strstr(*distro, "ubuntu"))
+        return ubuntu_logo;
 
     /* No ASCII art. */
     return NULL;
@@ -234,45 +245,7 @@ int count_special(char *str, int target_length){
     return i;
 }
 
-
-int main (int argc, char *argv[]){
-    /* Current implementations of getresoultion,
-       gtk, do not use asprintf. */
-    resolution_string = malloc(128);
-    gtk_string = malloc(128);
-
-    /* Get the window size */
-    struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-
-
-    /* Start with 20 options, resize if larger. */
-    int len = 24;
-    char *lead_color = YELLOW;
-    char *second_color = BLUE;
-
-    char **user_string;
-    user_string = malloc(len * sizeof(char *));
-    read_configs("configurations/neofetch-style.txt", &user_string, &len);
-
-    /* Reverse the array for our printing function. */
-    char *temp;
-    int start = 0, end = len;
-    while (start < end){
-        temp = user_string[start];    
-        user_string[start++] = user_string[end]; 
-        user_string[end--] = temp; 
-    }
-
-    /* Actually print the logo and info */
-    printf("\n");
-    char **out = get_os_code(&distro_string)(lead_color, second_color, user_string, len);
-    for(int i = 0; out[i] != 0; i++){
-        /* Terminal commands don't count. */
-        printf("%.*s%s%s\n", count_special(out[i], w.ws_col), out[i], DEFAULT, BG_DEFAULT);
-    }
-
-    /* Free up everything. */
+void free_globals(void){
     free(gpu_string);
     free(cpu_string);
     free(wm_string);
@@ -283,7 +256,101 @@ int main (int argc, char *argv[]){
     free(memory_string);
     free(model_string);
     free(pkg_string);
+}
 
+int main (int argc, char *argv[]){
+    /* Set up command-line options. */
+
+    static struct option long_options[] = {
+        {"aldos",      no_argument,  0, ALDOS },
+        {"alpine",     no_argument,  0, ALPINE },
+        {"antergos",   no_argument,  0, ANTERGOS },
+        {"alpine",     no_argument,  0, ALPINE },
+        {"archold",    no_argument,  0, ARCH_OLD },
+        {"arch",       no_argument,  0, ARCH },
+        {"mint",       no_argument,  0, MINT },
+        {"ubuntu",     no_argument,  0, UBUNTU },
+        {"linux",      no_argument,  0, LINUX },
+        {"config",     required_argument, 0, 66},
+        {0,           0,             0, 0 }
+    };
+
+    /* Get the window size */
+
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+
+    /* Current implementations of getresoultion,
+       gtk, do not use asprintf. */
+
+    resolution_string = malloc(128);
+    gtk_string = malloc(128);
+
+    int len = 24;
+
+    char **user_string;
+    user_string = malloc(len * sizeof(char *));
+
+    int opt= 0;
+    int long_index = 0;
+    char *opt_name = NULL;
+    char **(* out_func)(char *, char *, char **, int) = NULL;
+    char **(* tmp_art_lookup)(char *, char *, char **, int) = NULL;
+ 
+    /* Evaluate the command-line arguments. */
+    while ((opt = getopt_long_only(argc, argv,"", long_options, &long_index)) != -1) {
+        if (opt == 66){
+            read_configs(argv[1], &user_string, &len);
+        }else{
+            asprintf(&opt_name, long_options[long_index].name);
+            tmp_art_lookup = get_os_code(&opt_name);
+            if(tmp_art_lookup != NULL)
+                out_func = tmp_art_lookup;
+        }
+    }
+
+    /* Deal with defaults */
+    char *lead_color = YELLOW;
+    char *second_color = BLUE;
+
+    /* First, the configuration file */
+    if(!*user_string){
+        read_configs("/home/ben/github/slash/configurations/neofetch-style.txt", &user_string, &len);
+    }
+
+    /* Reverse the array for our printing function. */
+    char *temp;
+    int start = 0, end = len;
+    while (start < end){
+        temp = user_string[start];    
+        user_string[start++] = user_string[end]; 
+        user_string[end--] = temp; 
+    }
+
+    for(int i = 0; i <= len; i++){
+        string_fill(&user_string[i]);
+    }
+
+    /* Secondly, get the OS code if the user didn't specify it. */
+    char **out;
+    if (!out_func){
+        get_distro(&distro_string);
+        out = get_os_code(&distro_string)(lead_color, second_color, user_string, len);
+    } else {
+        out = out_func(lead_color, second_color, user_string, len);
+    }
+
+
+    printf("\n");
+    for(int i = 0; out[i] != 0; i++){
+        /* Terminal commands don't count. */
+        //printf("%.*s%s%s\n", count_special(out[i], w.ws_col), out[i], DEFAULT, BG_DEFAULT);
+        printf(out[i]);
+        printf("\n");
+    }
+
+    /* Free up everything. */
+    free_globals();
     for(int i = 0; i < len; i++){
         free(user_string[i]);
     }
@@ -292,4 +359,5 @@ int main (int argc, char *argv[]){
         free(out[i]);
     }
     free(user_string);
+
 }

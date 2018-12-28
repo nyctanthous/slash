@@ -1,5 +1,5 @@
 CC=gcc 
-CFLAGS=-Wall
+CFLAGS=-Wall -O3
 
 all: slash
 slash: systeminfo.o logos.o slash.o
