@@ -114,11 +114,16 @@ void get_resolution(char **res){
     }
 
     while (fgets(tmp, sizeof(tmp) - 1, fp) != NULL) {
-        if (num_iterations++)
-            strcat(*res, ", ");
+        if (num_iterations++ && res)
+            asprintf(res, "%s, ", *res);
 
         token = strtok(tmp, " ");
-        strcat(*res, token);
+
+        if (*res != NULL)
+            asprintf(res, "%s%s", *res, token);
+        else{
+            asprintf(res, token);
+        }
 
         /* Now, for hz */
         token = strtok(NULL, " ");
@@ -403,7 +408,7 @@ void get_wm_theme (char **theme_string, char **wm_string){
     else if(strcmp(*wm_string, "Cinnamon") || strcmp(*wm_string, "Muffin") || strcmp(*wm_string, "Mutter (Muffin)"))
         fp = popen("(gsettings get org.cinnamon.theme name)", "r");
     
-    if(fp == NULL){
+    if(!fp){
        asprintf(theme_string, "Unknown");
        return;
     }
@@ -483,10 +488,10 @@ void get_gtk (char **gtk_string, char *name, char *gsettings){
     if (strcmp(tmp_gtk2, tmp_gtk3)){
         strcat(tmp_gtk3, " [GTK2]");
         strcat(tmp_gtk2, " [GTK3]");
-        sprintf(*gtk_string, "%s %s", tmp_gtk2, tmp_gtk3);
+        asprintf(gtk_string, "%s %s", tmp_gtk2, tmp_gtk3);
     }else{
         strcat(tmp_gtk2, " [GTK2/3]");
-        strcpy(*gtk_string, tmp_gtk2);
+        asprintf(gtk_string, tmp_gtk2);
     }
 
 

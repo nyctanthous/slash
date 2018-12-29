@@ -128,6 +128,131 @@ char** arch_logo(char *c1, char *c2, char **info, int num_info_lines){
     return out;
 }
 
+char** artix_logo(char *c1, char *c2, char **info, int num_info_lines){
+    char **out = malloc(19 * sizeof(char *));
+    asprintf(&out[0],  "%s           `-/:-`       `-:/-          %s", c1, put(num_info_lines, info));
+    asprintf(&out[1],  "%s       `+hNm:             :NNh/`       %s", c1, put(num_info_lines, info));
+    asprintf(&out[2],  "%s     .sNMMy..            `..yMMNs.     %s", c1, put(num_info_lines, info));
+    asprintf(&out[3],  "%s   `oNNNMo  y:           :s  sMNNN+    %s", c1, put(num_info_lines, info));
+    asprintf(&out[4],  "%s  `hMMo:o.  Nh           hN  .o-sMMy   %s", c1, put(num_info_lines, info));
+    asprintf(&out[5],  "%s `dMMMM/+y-`hMo` `   ` `oMy`-y++MMMMh  %s", c1, put(num_info_lines, info));
+    asprintf(&out[6],  "%s sMMMMMd.odh+NMd/y` `y/dMN+hdo-mMMMMM+ %s", c1, put(num_info_lines, info));
+    asprintf(&out[7],  "%s NMMMMMMm/`oMNMMMMdhmMMMMNMo`/mMMMMMMm %s", c1, put(num_info_lines, info));
+    asprintf(&out[8],  "%s MMMMMMMMs  NMMMMMMMMMMMMMN  yMMMMMMMM %s", c1, put(num_info_lines, info));
+    asprintf(&out[9],  "%s MMMMMMMMN: /dMMdMMMMNmMMd/ /MMMMMMMMM %s", c1, put(num_info_lines, info));
+    asprintf(&out[10], "%s NMMMMMMMMNo  dNhyMMNsmNd  sNMMMMMMMMm %s", c1, put(num_info_lines, info));
+    asprintf(&out[11], "%s +MMMMMMMMMMmo: \\dMMMd/ /smMMMMMMMMMM  %s", c1, put(num_info_lines, info));
+    asprintf(&out[12], "%s  yMMMMMMMMMMMN. -MMM- -NMMMMMMMMMMMs  %s", c1, put(num_info_lines, info));
+    asprintf(&out[13], "%s  `sMMMymMm.oNMd.'yMy'.dMmo.NMdhMMMo   %s", c1, put(num_info_lines, info));
+    asprintf(&out[14], "%s    :dMm/+h: .sMd` - .mNo` /h//NMd:    %s", c1, put(num_info_lines, info));
+    asprintf(&out[15], "%s     `/hNy-.`  -hd  `my.  `.-hNh:      %s", c1, put(num_info_lines, info));
+    asprintf(&out[16], "%s        .+ys:    :: ::    :yy+`        %s", c1, put(num_info_lines, info));
+    asprintf(&out[17], "%s            -:.         .:.            %s", c1, put(num_info_lines, info));
+    out[18] = 0;
+
+    return out;
+}
+
+char** blag_logo(char *c1, char *c2, char **info, int num_info_lines){
+    char **out = malloc(19 * sizeof(char *));
+    asprintf(&out[0],  "%s    .+::::::::::::::::::::::::::+.    %s", c1, put(num_info_lines, info));
+    asprintf(&out[1],  "%s    |/            %s-o%s            \\|    %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[2],  "%s    |            %s:NMs%s            |    %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[3],  "%s    |           %s:NMMMy`%s          |    %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[4],  "%s    |    %s-:/+osyNMMMMMdyso+/:`%s   |    %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[5],  "%s    |    %s:hNMMMMMMMMMMMMMMMm+`%s   |    %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[6],  "%s    |      %s-yNMMMMMMMMMMMd/`%s     |    %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[7],  "%s    |        %s/MMMMMMMMMMh`%s       |    %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[8],  "%s    |        %ssMMMMMMMMMMN%s        |    %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[9],  "%s    |        %smMNds:-+hmMM:%s       |    %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[10], "%s    |       %s.s/.`     `-++%s       |    %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[11], "%s    |                            |    %s", c1, put(num_info_lines, info));
+    asprintf(&out[12], "%s    |............................|    %s", c1, put(num_info_lines, info));
+    asprintf(&out[13], "%s    %s88\"\"Yb 88        db     dP\"\"b8%s    %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[14], "%s    %s88__dP 88       dPYb   dP   `\"%s    %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[15], "%s    %s88\"\"Yb 88  .o  dP__Yb  Yb  \"88%s    %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[16], "%s    %s88oodP 88ood8 dP\"\"\"\"Yb  YboodP%s    %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[17], "%s    '++/::::::::::::::::::::::\\++'    %s", c1, put(num_info_lines, info));
+    out[18] = 0;
+
+    return out;
+}
+
+char** blank_on_logo(char *c1, char *c2, char **info, int num_info_lines){
+    char **out = malloc(19 * sizeof(char *));
+    asprintf(&out[0],  "%s `shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhho` %s", c1, put(num_info_lines, info));
+    asprintf(&out[1],  "%s yMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMy %s", c1, put(num_info_lines, info));
+    asprintf(&out[2],  "%s hMMMMMMMMmho+::::/+shNMMMMMMMN%sdhhd%sNy %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[3],  "%s hMMMMMmo.             :sNMMMMh%syyyy%sdy %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[4],  "%s hMMMm/        .-.       `oNMMy%syyyy%sdy %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[5],  "%s hMMy`     +hNMMMMMmy/     .dMy%syyyy%sdy %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[6],  "%s hMy     +NMMMMMMMMMMMm:    `my%syyyy%sdy %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[7],  "%s hN`    oMMMMMMMMMMMMMMM:    :y%syyyy%sdy %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[8],  "%s hy     NMMMMMMMMMMMMMMMd     y%syyyy%sdy %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[9],  "%s hs     NMMMMMMMMMMMMMMMd     y%syyyy%sdy %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[10], "%s hm     sMMMMMMMMMMMMMMM/    .y%syyyy%sdy %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[11], "%s hM+     oNMMMMMMMMMMMN/     hy%syyyy%sdy %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[12], "%s hMN/     .odMMMMMMNd+`     yMy%syyyy%sdy %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[13], "%s hMMMy`      `-:::'       -dMMh%syyyy%sdy %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[14], "%s hMMMMNs-               :hMMMMh%syyyy%sdy %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[15], "%s hMMMMMMMmy+-.     .:+hNMMMMMMm%sdhhd%sNy %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[16], "%s yMMMMMMMMMMMMMNNMMMMMMMMMMMMMMMMMMMs %s", c1, put(num_info_lines, info));
+    asprintf(&out[17], "%s `oyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy+` %s", c1, put(num_info_lines, info));
+    out[18] = 0;
+
+    return out;
+}
+
+char** debian_logo(char *c1, char *c2, char **info, int num_info_lines){
+    char **out = malloc(19 * sizeof(char *));
+    asprintf(&out[0],  "%s               ./osso+++/-.            %s", c1, put(num_info_lines, info));
+    asprintf(&out[1],  "%s           :ohhhhhsssssyhhhy+:         %s", c1, put(num_info_lines, info));
+    asprintf(&out[2],  "%s         /yhhyo/.        -+hhhy:       %s", c1, put(num_info_lines, info));
+    asprintf(&out[3],  "%s       .shho:`             `+hhhs`     %s", c1, put(num_info_lines, info));
+    asprintf(&out[4],  "%s      -yh+`         ...      -hh/-     %s", c1, put(num_info_lines, info));
+    asprintf(&out[5],  "%s     .hh/         //:---`     oho`     %s", c1, put(num_info_lines, info));
+    asprintf(&out[6],  "%s     oh+        .+`           :hy      %s", c1, put(num_info_lines, info));
+    asprintf(&out[7],  "%s     oh-        y`            :ho      %s", c1, put(num_info_lines, info));
+    asprintf(&out[8],  "%s     oh`        y-           `oy`      %s", c1, put(num_info_lines, info));
+    asprintf(&out[9],  "%s     oh.        -s.         .s+`       %s", c1, put(num_info_lines, info));
+    asprintf(&out[10], "%s     :h+        ..++:.  .-+o+.         %s", c1, put(num_info_lines, info));
+    asprintf(&out[11], "%s     `yh:`        `-:/++:-.            %s", c1, put(num_info_lines, info));
+    asprintf(&out[12], "%s      .hho                             %s", c1, put(num_info_lines, info));
+    asprintf(&out[13], "%s       .yh:                            %s", c1, put(num_info_lines, info));
+    asprintf(&out[14], "%s        `oh+`                          %s", c1, put(num_info_lines, info));
+    asprintf(&out[15], "%s          .oy/`                        %s", c1, put(num_info_lines, info));
+    asprintf(&out[16], "%s            `/s+`                      %s", c1, put(num_info_lines, info));
+    asprintf(&out[17], "%s               `-:-.`                  %s", c1, put(num_info_lines, info));
+    out[18] = 0;
+
+    return out;
+}
+
+char** fedora_logo(char *c1, char *c2, char **info, int num_info_lines){
+    char **out = malloc(19 * sizeof(char *));
+    asprintf(&out[0],  "%s               ..........              %s", c1, put(num_info_lines, info));
+    asprintf(&out[1],  "%s          ....................         %s", c1, put(num_info_lines, info));
+    asprintf(&out[2],  "%s        .............%s/syhdhyo-%s..       %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[3],  "%s      ............%s-yNMMMMMMMMo/:-%s.     %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[4],  "%s    .............%s/NMMMNyoooso////-%s..   %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[5],  "%s   .............%s-NMMMy-%s......%s:////-%s..  %s", c1, c2, c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[6],  "%s  ..............%s+MMMN%s.........%s:///-%s... %s", c1, c2, c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[7],  "%s `..............%s+MMMm%s........%s-////-%s...`%s", c1, c2, c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[8],  "%s ...............%s+MMMN%s......%s-:////:%s.....%s", c1, c2, c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[9],  "%s ......%s-::/hNNNNNMMMMNNNNms/////:%s......%s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[10], "%s ....%s:////+NMMMMMMMMMMMMMMy//:-%s........%s", c1, c2, c1,  put(num_info_lines, info));
+    asprintf(&out[11], "%s ..-%s/////:%s--::::%ssMMMN%s::::--...........`%s", c1, c2, c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[12], "%s ..%s:///:%s........%s+MMMN%s................. %s", c1, c2, c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[13], "%s ..%s////%s-........%s+MMMm%s................  %s", c1, c2, c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[14], "%s ..%s:///:%s.......%s-dMMMh%s...............   %s", c1, c2, c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[15], "%s ..%s-///////%s::%s/sNMMMm-%s.............`    %s", c1, c2, c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[16], "%s ....%s://dMMMMMMMMNs-%s............`      %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[17], "%s ......%s-+dNNNNdy+-%s............`        %s", c1, c2, c1, put(num_info_lines, info));
+    asprintf(&out[18], "%s  `......................'`            %s", c1, put(num_info_lines, info));
+    out[18] = 0;
+
+    return out;
+}
 
 char** mint_logo(char *c1, char *c2, char **info, int num_info_lines){
     char **out = malloc(19 * sizeof(char *));
@@ -180,24 +305,24 @@ char** ubuntu_logo(char *c1, char *c2, char **info, int num_info_lines){
 
 char** tux(char *c1, char *c2, char **info, int num_info_lines){
     char **out = malloc(19 * sizeof(char *));      
-    asprintf(&out[0],  "%s                  `-::::-.                   %s", c1, put(num_info_lines, info));
-    asprintf(&out[1],  "%s              `/ss+::://+oss+`               %s", c1, put(num_info_lines, info));
-    asprintf(&out[2],  "%s            `sdsshmNMMMMMMNmmMy.             %s", c1, put(num_info_lines, info));
-    asprintf(&out[3],  "%s           :NNNMMdhdNMMMMMMMMMMM+            %s", c1, put(num_info_lines, info));
-    asprintf(&out[4],  "%s          :MMMMm/..-/mMNdsoymMMMM+           %s", c1, put(num_info_lines, info));
-    asprintf(&out[5],  "%s          dMMMh     `.h:   `:NMMMN`          %s", c1, put(num_info_lines, info));
-    asprintf(&out[6],  "%s          MMMM/     hd+m/    +MMMM-          %s", c1, put(num_info_lines, info));
-    asprintf(&out[7],  "%s         :MMMMm.   .//+o/`  .dMMMMh          %s", c1, put(num_info_lines, info));
-    asprintf(&out[8],  "%s        :hNMMMMMy../+:-/o--yMMMMMmso:`       %s", c1, put(num_info_lines, info));
-    asprintf(&out[9],  "%s     .++/sNMMMd/     :+-    -hMMMMmo:+o-     %s", c1, put(num_info_lines, info));
-    asprintf(&out[10], "%s   .so:+mMMMMs                +MMMMMmo-+o`   %s", c1, put(num_info_lines, info));
-    asprintf(&out[11], "%s  /o:odMNmMMd                  sMMMsNMms/o.  %s", c1, put(num_info_lines, info));
-    asprintf(&out[12], "%s :symMNs`-MMo                  :MMy `+hNNdo  %s", c1, put(num_info_lines, info));
-    asprintf(&out[13], "%s -syo-    /My                  oMd`     ..   %s", c1, put(num_info_lines, info));
-    asprintf(&out[14], "%s           :m+/+oo/`     ./++//Ns            %s", c1, put(num_info_lines, info));
-    asprintf(&out[15], "%s           /+-```-+ds  -dy/.`../+`           %s", c1, put(num_info_lines, info));
-    asprintf(&out[16], "%s          +:```````:my.Ns.``````.o           %s", c1, put(num_info_lines, info));
-    asprintf(&out[17], "%s          :---------//-+:--------:`          %s", c1, put(num_info_lines, info));
+    asprintf(&out[0],  "%s                 `-::::-.                 %s", c1, put(num_info_lines, info));
+    asprintf(&out[1],  "%s             `/ss+::://+oss+`             %s", c1, put(num_info_lines, info));
+    asprintf(&out[2],  "%s           `sdsshmNMMMMMMNmmMy.           %s", c1, put(num_info_lines, info));
+    asprintf(&out[3],  "%s          :NNNMMdhdNMMMMMMMMMMM+          %s", c1, put(num_info_lines, info));
+    asprintf(&out[4],  "%s         :MMMMm/..-/mMNdsoymMMMM+         %s", c1, put(num_info_lines, info));
+    asprintf(&out[5],  "%s         dMMMh     `.h:   `:NMMMN`        %s", c1, put(num_info_lines, info));
+    asprintf(&out[6],  "%s         MMMM/     hd+m/    +MMMM-        %s", c1, put(num_info_lines, info));
+    asprintf(&out[7],  "%s        :MMMMm.   .//+o/`  .dMMMMh        %s", c1, put(num_info_lines, info));
+    asprintf(&out[8],  "%s       :hNMMMMMy../+:-/o--yMMMMMmso:`     %s", c1, put(num_info_lines, info));
+    asprintf(&out[9],  "%s    .++/sNMMMd/     :+-    -hMMMMmo:+o-   %s", c1, put(num_info_lines, info));
+    asprintf(&out[10], "%s  .so:+mMMMMs                +MMMMMmo-+o` %s", c1, put(num_info_lines, info));
+    asprintf(&out[11], "%s /o:odMNmMMd                  sMMMsNMms/o.%s", c1, put(num_info_lines, info));
+    asprintf(&out[12], "%s:symMNs`-MMo                  :MMy `+hNNdo%s", c1, put(num_info_lines, info));
+    asprintf(&out[13], "%s-syo-    /My                  oMd`     .. %s", c1, put(num_info_lines, info));
+    asprintf(&out[14], "%s          :m+/+oo/`     ./++//Ns          %s", c1, put(num_info_lines, info));
+    asprintf(&out[15], "%s          /+-```-+ds  -dy/.`../+`         %s", c1, put(num_info_lines, info));
+    asprintf(&out[16], "%s         +:```````:my.Ns.``````.o         %s", c1, put(num_info_lines, info));
+    asprintf(&out[17], "%s         :---------//-+:--------:`        %s", c1, put(num_info_lines, info));
     out[18] = 0;
     return out;
 }

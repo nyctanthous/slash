@@ -35,6 +35,24 @@ void string_replacer(char **str, char *symbol, char *color){
         *str = replace_str(*str, symbol, color);
 }
 
+void free_globals(void){
+    free(gpu_string);
+    free(cpu_string);
+    free(wm_string);
+    free(distro_string);
+    free(resolution_string);
+    free(uptime_string);
+    free(shell_string);
+    free(memory_string);
+    free(model_string);
+    free(pkg_string);
+}
+
+void safe_exit(int status){
+    free_globals();
+    exit(status);
+}
+
 void string_fill(char **str){
     // Add light foreground color escape sequences.
     string_replacer(str, "?lq", LIGHT_GRAY);
@@ -178,7 +196,7 @@ void read_configs(char *filename, char ***user_string, int *arr_len){
     fp = fopen(filename, "r");
     if (fp == NULL){
         printf("Could not read configuration file!\n");
-        exit(EXIT_FAILURE);
+        safe_exit(EXIT_FAILURE);
     }
 
     while (getline(&line, &len, fp) != -1) {
@@ -214,6 +232,18 @@ char ** (* get_os_code(char **distro))(char *, char *, char **, int){
         return arch_old_logo;
     if(strstr(*distro, "arch"))
         return arch_logo;
+    if(strstr(*distro, "artix"))
+        return artix_logo;
+    if(strstr(*distro, "blag"))
+        return blag_logo;
+    if(strstr(*distro, "blankon"))
+        return blank_on_logo;
+
+    if(strstr(*distro, "debian"))
+        return debian_logo;
+    
+    if(strstr(*distro, "fedora"))
+        return fedora_logo;
     
     if(strstr(*distro, "linux"))
         return tux;
@@ -229,7 +259,7 @@ char ** (* get_os_code(char **distro))(char *, char *, char **, int){
 
 }
 
-/* Figure out how long strings should be to fit onscreen
+/* Figure  terminal_output how long strings should be to fit onscreen
    by doing strlen and ignoring the escape sequences. */
 int count_special(char *str, int target_length){
     int i = 0;
@@ -245,32 +275,24 @@ int count_special(char *str, int target_length){
     return i;
 }
 
-void free_globals(void){
-    free(gpu_string);
-    free(cpu_string);
-    free(wm_string);
-    free(distro_string);
-    free(resolution_string);
-    free(uptime_string);
-    free(shell_string);
-    free(memory_string);
-    free(model_string);
-    free(pkg_string);
-}
-
 int main (int argc, char *argv[]){
     /* Set up command-line options. */
 
     static struct option long_options[] = {
-        {"aldos",      no_argument,  0, ALDOS },
-        {"alpine",     no_argument,  0, ALPINE },
-        {"antergos",   no_argument,  0, ANTERGOS },
-        {"alpine",     no_argument,  0, ALPINE },
-        {"archold",    no_argument,  0, ARCH_OLD },
-        {"arch",       no_argument,  0, ARCH },
-        {"mint",       no_argument,  0, MINT },
-        {"ubuntu",     no_argument,  0, UBUNTU },
-        {"linux",      no_argument,  0, LINUX },
+        {"aldos",      no_argument,  0, ALDOS},
+        {"alpine",     no_argument,  0, ALPINE},
+        {"antergos",   no_argument,  0, ANTERGOS},
+        {"alpine",     no_argument,  0, ALPINE},
+        {"archold",    no_argument,  0, ARCH_OLD},
+        {"arch",       no_argument,  0, ARCH},
+        {"artix",      no_argument,  0, ARTIX},
+        {"blag",       no_argument,  0, BLAG},
+        {"blankon",    no_argument,  0, BLANK_ON},
+        {"debian",     no_argument,  0, DEBIAN},
+        {"fedora",     no_argument,  0, FEDORA},
+        {"mint",       no_argument,  0, MINT},
+        {"ubuntu",     no_argument,  0, UBUNTU},
+        {"linux",      no_argument,  0, LINUX},
         {"config",     required_argument, 0, 66},
         {0,           0,             0, 0 }
     };
@@ -279,12 +301,6 @@ int main (int argc, char *argv[]){
 
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-
-    /* Current implementations of getresoultion,
-       gtk, do not use asprintf. */
-
-    resolution_string = malloc(128);
-    gtk_string = malloc(128);
 
     int len = 24;
 
@@ -300,11 +316,13 @@ int main (int argc, char *argv[]){
     /* Evaluate the command-line arguments. */
     while ((opt = getopt_long_only(argc, argv,"", long_options, &long_index)) != -1) {
         if (opt == 66){
+            /* Load configuration file */
             read_configs(argv[1], &user_string, &len);
-        }else{
+        } else {
+            /* Try to load artwork */
             asprintf(&opt_name, long_options[long_index].name);
             tmp_art_lookup = get_os_code(&opt_name);
-            if(tmp_art_lookup != NULL)
+            if(tmp_art_lookup)
                 out_func = tmp_art_lookup;
         }
     }
@@ -327,37 +345,34 @@ int main (int argc, char *argv[]){
         user_string[end--] = temp; 
     }
 
+    /* Replace special symbols */
     for(int i = 0; i <= len; i++){
         string_fill(&user_string[i]);
     }
 
     /* Secondly, get the OS code if the user didn't specify it. */
-    char **out;
+    char **terminal_output;
     if (!out_func){
         get_distro(&distro_string);
-        out = get_os_code(&distro_string)(lead_color, second_color, user_string, len);
+        terminal_output = get_os_code(&distro_string)(lead_color, second_color, user_string, len);
     } else {
-        out = out_func(lead_color, second_color, user_string, len);
+        terminal_output = out_func(lead_color, second_color, user_string, len);
     }
 
-
     printf("\n");
-    for(int i = 0; out[i] != 0; i++){
+    for(int i = 0; terminal_output[i] != 0; i++){
         /* Terminal commands don't count. */
-        //printf("%.*s%s%s\n", count_special(out[i], w.ws_col), out[i], DEFAULT, BG_DEFAULT);
-        printf(out[i]);
-        printf("\n");
+        printf("%.*s%s%s\n", count_special( terminal_output[i], w.ws_col), terminal_output[i], DEFAULT, BG_DEFAULT);
     }
 
     /* Free up everything. */
-    free_globals();
     for(int i = 0; i < len; i++){
         free(user_string[i]);
     }
 
-    for(int i = 0; out[i] != 0; i++){
-        free(out[i]);
+    for(int i = 0;  terminal_output[i] != 0; i++){
+        free(terminal_output[i]);
     }
     free(user_string);
-
+    safe_exit(0);
 }

@@ -5,7 +5,6 @@
 #define ARCH          4
 #define ARTIX         5
 #define ARYA          6
-#define BITRIG        7
 #define BLAG          8
 #define BLANK_ON      9
 #define BSD           10
@@ -157,11 +156,11 @@
 #define BG_LIGHT_RED     "\e[101m"
 #define BG_LIGHT_GREEN   "\e[102m"
 #define BG_LIGHT_YELLOW  "\e[103m"
-#define BG_LIGHT_BLUE    "\e[104m"
-#define BG_LIGHT_MAGENTA "\e[105m"
-#define BG_LIGHT_CYAN    "\e[106m"
-#define BG_LIGHT_GRAY    "\e[47m"
-#define BG_WHITE         "\e[107m"
+#define BG_LIGHT_BLUE    "\e[m"
+#define BG_LIGHT_MAGENTA "\e[m"
+#define BG_LIGHT_CYAN    "\e[m"
+#define BG_LIGHT_GRAY    "\e[m"
+#define BG_WHITE         "\e[m"
 
 #define BG_DEFAULT   "\e[49m"
 #define BG_BLACK     "\e[40m"
