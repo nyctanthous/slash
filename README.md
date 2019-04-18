@@ -11,8 +11,7 @@ In most Screenfetch-like programs, you have fairly limited control over what inf
 ### Installation
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/47d01a744a144664b8abeff7a9592fd5)](https://www.codacy.com/app/ben_mon/slash?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Nyctanthous/slash&amp;utm_campaign=Badge_Grade)
 
-`slash` is still under development. At this time, you should clone the repository and run the makefile.
-
+`slash` is still under development. At this time, you should clone the repository and run `make`. `lspci` is expected for finding out GPU information.
 
 ### Thanks
 Bash or no, the programming behind [screenfetch][1] and [neofetch][2] has proven a valuable resource when looking for a place to get started. Thanks for the idea and for providing these useful tools to the community.
