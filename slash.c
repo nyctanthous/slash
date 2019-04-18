@@ -199,13 +199,14 @@ void read_configs(char *filename, char ***user_string, int *arr_len){
         safe_exit(EXIT_FAILURE);
     }
 
-    while (getline(&line, &len, fp) != -1) {
+    int chars_read;
+    while ((chars_read = getline(&line, &len, fp)) != -1) {
         /* Strip off any newlines */
         line[strcspn(line, "\n")] = 0;
 
         /* Add the line to our 2D array */
-        (* user_string)[index] = (char *)malloc((sizeof line) * sizeof(char));
-        memcpy((* user_string)[index], line, sizeof line);
+        (* user_string)[index] = malloc((strnlen(line, chars_read) + 1) * sizeof(char));
+        memcpy((* user_string)[index], line, strnlen(line, chars_read) + 1);
         index++;
     }
 
@@ -305,7 +306,7 @@ int main (int argc, char *argv[]){
     int len = 24;
 
     char **user_string;
-    user_string = malloc(len * sizeof(char *));
+    user_string = (char **)malloc(len * sizeof(char *));
 
     int opt= 0;
     int long_index = 0;

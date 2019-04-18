@@ -77,13 +77,11 @@ void get_cpu_model(int length_mode, char **cpu_string){
     while (token != NULL && !strstr(token, "model name")){
         token = strtok(NULL, "\n");
     }
-
-    // Now, just get the CPU model.
-    char *cpu_name = strtok(token, ":");
+    strtok(token, ":");
 
     // Skip over the lead part
-    cpu_name = strtok(NULL, ":");
-    *cpu_name++;
+    char *cpu_name = strtok(NULL, ":");
+    cpu_name++;
 
     asprintf(cpu_string, cpu_name);
 
@@ -125,9 +123,6 @@ void get_resolution(char **res){
         else{
             asprintf(res, token);
         }
-
-        /* Now, for hz */
-        token = strtok(NULL, " ");
     }
 
     fclose(fp);
@@ -149,16 +144,16 @@ void get_gpu(char **str){
             /* Since we're using LSPCI, we know the lead format is XX:YY.Z
                We don't need it, so strip it. */
             /* AA:BB:C */
-            char *token = strtok(tmp, "\"");
+            strtok(tmp, "\"");
             
             /* VGA compatible controller */
-            token = strtok(NULL, "\"");
+            strtok(NULL, "\"");
 
             /* Whitespace */
-            token = strtok(NULL, "\"");
+            strtok(NULL, "\"");
 
             /* Company */
-            token = strtok(NULL, "\"");
+            char *token = strtok(NULL, "\"");
 
             if (strstr(token, "Intel"))
                 strcpy(manufacturer, "Intel");
@@ -170,7 +165,7 @@ void get_gpu(char **str){
             }
             
             /* Whitespace */
-            token = strtok(NULL, "\"");
+            strtok(NULL, "\"");
 
             /* Model */
             token = strtok(NULL, "\"");

@@ -1,5 +1,6 @@
 
 <h1 align="center">slash</h1>
+
 <p align="center"><b>S</b>creenfetch-<b>L</b>ike <b>A</b>ugmentation for <b>Sh</b>ells</p>
 
 ### Bash sucks
