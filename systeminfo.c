@@ -103,15 +103,16 @@ void get_cpu_model(int length_mode, char **cpu_string){
 }
 
 void get_resolution(char **res){
-    char tmp[32];
-    char* token;
-    int num_iterations = 0;
+    /* Open the command for reading. */
     FILE *fp = popen("xrandr | fgrep '*'", "r");
-
     if (fp == NULL) {
         printf("Failed to run xrandr or fgrep to get resolution.\n" );
         exit(1);
     }
+
+    char tmp[32];
+    char* token;
+    int num_iterations = 0;
 
     while (fgets(tmp, sizeof(tmp) - 1, fp) != NULL) {
         if (num_iterations++ && res)
@@ -206,13 +207,14 @@ void get_gpu(char **str){
 void get_uptime(int length_mode, char **uptime_str){
    FILE *cpuinfo = fopen("/proc/uptime", "rb");
    char *arg = 0;
-   char *ptr;
    size_t size = 0;
 
     if (getdelim(&arg, &size, 0, cpuinfo) ==  -1){
         printf("Could not get uptime.");
         return;
     }
+    char *ptr;
+    
     long ret = strtol(arg, &ptr, 10);
     int days = ret / (24 * 3600);
     ret -= days * (24 * 3600);
@@ -407,7 +409,9 @@ void get_wm_theme (char **theme_string, char **wm_string){
         fp = popen("awk -F '\\\\(quote|\\\\)' '/default-frame-style/ {print $(NF-4)}' \"${HOME}/.sawfish/custom\"", "r");
     else if(strcmp(*wm_string, "Cinnamon") || strcmp(*wm_string, "Muffin") || strcmp(*wm_string, "Mutter (Muffin)"))
         fp = popen("(gsettings get org.cinnamon.theme name)", "r");
-    
+    else
+       fp = NULL; 
+
     if(!fp){
        asprintf(theme_string, "Unknown");
        return;
@@ -439,6 +443,9 @@ void get_gtk (char **gtk_string, char *name, char *gsettings){
         sprintf(command_buffer,
                 "echo $(grep \"^[^#]*%s\" /usr/share/gtk-2.0/gtkrc)",
                 name);
+    }else{
+        /* Don't know, so just make it an empty string. */
+        tmp_gtk2[0] = 0;
     }
 
     if((fp = popen(command_buffer, "r")) != NULL){
@@ -473,6 +480,9 @@ void get_gtk (char **gtk_string, char *name, char *gsettings){
         sprintf(command_buffer,
                 "echo $(grep \"^[^#]*%s\" /etc/gtk-3.0/settings.ini)",
                 name);
+    }else{
+        /* Don't know, so just make it an empty string. */
+        tmp_gtk3[0] = 0;
     }
 
     if((fp = popen(command_buffer, "r")) != NULL){
