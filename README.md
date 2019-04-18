@@ -5,7 +5,7 @@
 ### Bash sucks
 While good for simple programs where latency or performance isn't important, there are real costs to running a bash script every time you open a terminal. Use something written in an actual development language instead.
 
-### Configurability is nice.
+### Configurability is nice
 In most Screenfetch-like programs, you have fairly limited control over what inforamtion gets displayed. Not so with slash. You are given a configuration file dictating the information and format, so now you can customize to your heart's content.
 
 ### Thanks

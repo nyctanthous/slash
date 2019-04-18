@@ -204,8 +204,8 @@ void read_configs(char *filename, char ***user_string, int *arr_len){
         line[strcspn(line, "\n")] = 0;
 
         /* Add the line to our 2D array */
-        (* user_string)[index] = malloc((strlen(line) + 1) * sizeof(char));
-        memcpy((* user_string)[index], line, strlen(line) + 1);
+        (* user_string)[index] = (char *)malloc((sizeof line) * sizeof(char));
+        memcpy((* user_string)[index], line, sizeof line);
         index++;
     }
 
